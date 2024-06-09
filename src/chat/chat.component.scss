@@ -44,20 +44,18 @@ body {
 }
 
 .messages {
-  max-height: calc(
-    100vh - 160px
-  ); /* Adjust this based on the height of the navbar and input area */
-  overflow-y: auto; /* Allow messages to scroll */
+  max-height: calc(100vh - 160px);
+  overflow-y: auto;
 }
 
 .input-area {
   grid-row: 3;
   grid-column: 2;
-  padding: 1rem 1rem 0 1rem; /* top right bottom left */
+  padding: 1rem 1rem 0 1rem;
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Ensure the input area takes the full height of the bottom row */
+  height: 100%;
   box-sizing: border-box;
 }
 
