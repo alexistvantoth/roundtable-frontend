@@ -1,0 +1,18 @@
+<div class="container">
+  <mat-card class="card">
+    <h2>Welcome at the RoundTable!</h2>
+    <form (ngSubmit)="login()">
+      <mat-form-field>
+        <input
+          matInput
+          type="text"
+          placeholder="Enter your username"
+          [(ngModel)]="username"
+          name="username"
+          required
+        />
+      </mat-form-field>
+      <button mat-raised-button type="submit">Login</button>
+    </form>
+  </mat-card>
+</div>

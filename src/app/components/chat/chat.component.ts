@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatService } from '../app/services/chat.service';
+import { ChatService } from '../../services/chat.service';
 import { Observable } from 'rxjs';
 import {
   FormControl,
@@ -7,13 +7,14 @@ import {
   ReactiveFormsModule,
   UntypedFormGroup,
 } from '@angular/forms';
-import { Message } from '../app/models/message.model';
-import { CookieService } from 'ngx-cookie-service';
+import { Message } from '../../models/message.model';
 import { MatInputModule } from '@angular/material/input';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Channel } from '../../models/channel.model';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -36,18 +37,21 @@ export class ChatComponent {
   messageContent!: string;
   recipient!: string;
   messages: Message[] = [];
-  username!: string;
+  currentUser!: string;
   newMessage$!: Observable<Message>;
 
-  constructor(
-    private chatService: ChatService,
-    private cookieService: CookieService
-  ) {}
+  channels: Channel[] = [];
+
+  constructor(private chatService: ChatService, private router: Router) {}
 
   ngOnInit() {
+    this.currentUser = localStorage.getItem('username') || '{}';
+
     this.form = new UntypedFormGroup({
       message: new FormControl(''),
     });
+
+    this.channels.push(new Channel('RoundTable', this.messages));
 
     this.chatService.getMessages().subscribe({
       next: (messages) => {
@@ -58,24 +62,25 @@ export class ChatComponent {
       },
     });
 
-    this.username = this.cookieService.get('username');
     return this.chatService.getNewMessage().subscribe((message: Message) => {
       this.messages.push(message);
     });
   }
 
-  sendMessage() {
+  sendMessage(to: string = 'RoundTable') {
     this.chatService.sendMessage(
-      new Message(
-        'TestSender',
-        'TestRecipient',
-        this.form.get('message')?.value
-      )
+      new Message(this.currentUser, to, this.form.get('message')?.value)
     );
     this.form.reset();
   }
 
+  sendDirectMessage(to: string) {}
+
+  selectChannel(channel: Channel): void {}
+
   logout() {
-    this.chatService.logout();
+    this.chatService.logout(this.currentUser);
+    localStorage.clear();
+    this.router.navigate(['/login']);
   }
 }

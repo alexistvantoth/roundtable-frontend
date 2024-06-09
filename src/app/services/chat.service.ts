@@ -24,7 +24,7 @@ export class ChatService {
   }
 
   getMessages(): Observable<Message[]> {
-    return this.http.get<any[]>('http://localhost:3000/chat');
+    return this.http.get<Message[]>('http://localhost:3000/chat');
   }
 
   sendPrivateMessage(message: Message) {
@@ -35,16 +35,9 @@ export class ChatService {
     return this.socket.fromEvent<Message>('privateMessage');
   }
 
-  login(username: string) {
-    this.cookieService.set('username', username);
-    this.socket.emit('login', username);
-  }
-
-  logout() {
-    const username = this.cookieService.get('username');
-    if (username) {
-      this.socket.emit('logout', username);
-      this.cookieService.delete('username');
+  logout(user: string) {
+    if (user) {
+      // http delete call to this user from the db
     }
   }
 }

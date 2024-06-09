@@ -1,0 +1,55 @@
+<div class="container">
+  <div class="navbar">
+    <span>Welcome to the RoundTable {{ currentUser }}!</span>
+    <button class="logout-button" (click)="logout()">Logout</button>
+  </div>
+  <div class="sidebar">
+    <div
+      class="channel"
+      *ngFor="let channel of channels"
+      (click)="selectChannel(channel)"
+    >
+      <div class="channel-message">
+        <strong>{{ channel.name }}</strong>
+        <div class="channel-content">{{ channel.messages.pop()?.content }}</div>
+        <div class="channel-timestamp">
+          {{
+            channel.messages.pop()?.timestamp | date : "yyyy.MM.dd. 'at' H:mm"
+          }}
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <h2>RoundTable</h2>
+    <div class="messages">
+      <!-- conditional rendering of sent message todo -->
+      <div
+        *ngFor="let message of messages"
+        class="message"
+        [ngClass]="{ 'is-current-user': message.from == currentUser }"
+      >
+        <div class="message-header">
+          <span class="sender">{{ message.from }}</span>
+          <span class="timestamp">{{
+            message.timestamp | date : "yyyy.MM.dd. 'at' H:mm"
+          }}</span>
+          <button class="dm-button" (click)="sendDirectMessage(message.to)">
+            <mat-icon aria-label="DM button" fontIcon="chat"></mat-icon>
+          </button>
+        </div>
+        <div class="message-content">{{ message.content }}</div>
+      </div>
+    </div>
+  </div>
+  <div class="input-area">
+    <form [formGroup]="form" class="form">
+      <mat-form-field>
+        <input matInput formControlName="message" />
+      </mat-form-field>
+      <button mat-fab color="primary" (click)="sendMessage()">
+        <mat-icon aria-label="Send button" fontIcon="send"></mat-icon>
+      </button>
+    </form>
+  </div>
+</div>
