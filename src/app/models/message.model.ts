@@ -1,8 +1,3 @@
 export class Message {
-  constructor(
-    public sender: string,
-    public recipient: string,
-    public content: string,
-    public isPrivate: boolean
-  ) {}
+  constructor(public from: string, public to: string, public content: string) {}
 }

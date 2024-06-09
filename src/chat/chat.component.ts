@@ -1,7 +1,5 @@
-import { Component, importProvidersFrom } from '@angular/core';
-import { socketIoConfig } from '../../socket-io.config';
+import { Component } from '@angular/core';
 import { ChatService } from '../app/services/chat.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
   FormControl,
@@ -37,7 +35,7 @@ export class ChatComponent {
   form!: UntypedFormGroup;
   messageContent!: string;
   recipient!: string;
-  messages: string[] = [];
+  messages: Message[] = [];
   username!: string;
   newMessage$!: Observable<Message>;
 
@@ -51,15 +49,28 @@ export class ChatComponent {
       message: new FormControl(''),
     });
 
+    this.chatService.getMessages().subscribe({
+      next: (messages) => {
+        this.messages = messages;
+      },
+      error: (err) => {
+        console.error(err);
+      },
+    });
+
     this.username = this.cookieService.get('username');
     return this.chatService.getNewMessage().subscribe((message: Message) => {
-      this.messages.push(message.content);
+      this.messages.push(message);
     });
   }
 
   sendMessage() {
     this.chatService.sendMessage(
-      new Message('Sender', 'Recipient', this.form.get('message')?.value, false)
+      new Message(
+        'TestSender',
+        'TestRecipient',
+        this.form.get('message')?.value
+      )
     );
     this.form.reset();
   }

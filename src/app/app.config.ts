@@ -9,6 +9,7 @@ import { routes } from './app.routes';
 import { SocketIoModule } from 'ngx-socket-io';
 import { socketIoConfig } from '../../socket-io.config';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -16,5 +17,6 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideAnimations(),
     importProvidersFrom(SocketIoModule.forRoot(socketIoConfig)),
+    provideHttpClient(),
   ],
 };

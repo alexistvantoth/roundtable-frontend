@@ -3,12 +3,17 @@ import { Socket } from 'ngx-socket-io';
 import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor(private socket: Socket, private cookieService: CookieService) {}
+  constructor(
+    private socket: Socket,
+    private cookieService: CookieService,
+    private http: HttpClient
+  ) {}
 
   sendMessage(message: Message): void {
     this.socket.emit('sendMessage', message);
@@ -18,9 +23,9 @@ export class ChatService {
     return this.socket.fromEvent<Message>('newMessage');
   }
 
-  // getMessages(): Observable<Message> {
-  //   //todo
-  // }
+  getMessages(): Observable<Message[]> {
+    return this.http.get<any[]>('http://localhost:3000/chat');
+  }
 
   sendPrivateMessage(message: Message) {
     this.socket.emit('privateMessage', message);
