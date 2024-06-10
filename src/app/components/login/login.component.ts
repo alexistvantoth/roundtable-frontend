@@ -32,12 +32,22 @@ export class LoginComponent {
   constructor(private chatService: ChatService, private router: Router) {}
 
   login(): void {
-    if (this.username.trim()) {
-      //http call to fetch existing username
-      //if not used yet proceed
-      //else error
-      localStorage.setItem('username', this.username);
-      this.router.navigate(['/chat']);
+    const user = this.username?.trim();
+    if (user) {
+      this.chatService.isUserNameTaken(user).subscribe({
+        next: (userNameTaken) => {
+          if (!userNameTaken) {
+            localStorage.setItem('username', this.username);
+            this.chatService.login(user);
+            this.router.navigate(['/chat']);
+          } else {
+            alert(`Username '${user}' already taken`);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+        },
+      });
     } else {
       alert('Please enter a username.');
     }

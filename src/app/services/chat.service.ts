@@ -1,22 +1,26 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
-import { CookieService } from 'ngx-cookie-service';
 import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { HttpClient } from '@angular/common/http';
+import { Channel } from '../models/channel.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ChatService {
-  constructor(
-    private socket: Socket,
-    private cookieService: CookieService,
-    private http: HttpClient
-  ) {}
+  constructor(private socket: Socket, private http: HttpClient) {}
 
   sendMessage(message: Message): void {
     this.socket.emit('sendMessage', message);
+  }
+
+  handleJoinEvent(): Observable<string> {
+    return this.socket.fromEvent<string>('userJoined');
+  }
+
+  handleDisconnectEvent(): Observable<string> {
+    return this.socket.fromEvent<string>('userDisconnected');
   }
 
   getNewMessage(): Observable<Message> {
@@ -27,17 +31,23 @@ export class ChatService {
     return this.http.get<Message[]>('http://localhost:3000/chat');
   }
 
-  sendPrivateMessage(message: Message) {
-    this.socket.emit('privateMessage', message);
+  getChannels(): Observable<Channel[]> {
+    return this.http.get<Channel[]>('http://localhost:3000/chat/channels');
   }
 
-  getPrivateMessages(): Observable<Message> {
-    return this.socket.fromEvent<Message>('privateMessage');
+  isUserNameTaken(username: string): Observable<boolean> {
+    return this.http.get<boolean>(`http://localhost:3000/chat/${username}`);
+  }
+
+  login(user: string) {
+    if (user) {
+      this.socket.emit('login', user);
+    }
   }
 
   logout(user: string) {
     if (user) {
-      // http delete call to this user from the db
+      this.socket.emit('logout', user);
     }
   }
 }

@@ -1,5 +1,3 @@
-import { Message } from './message.model';
-
 export class Channel {
-  constructor(public name: string, public messages: Message[]) {}
+  constructor(public name: string, public created: Date = new Date()) {}
 }

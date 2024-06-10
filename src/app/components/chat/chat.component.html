@@ -1,6 +1,8 @@
 <div class="container">
   <div class="navbar">
-    <span>Welcome to the RoundTable {{ currentUser }}!</span>
+    <!-- <span class="greeting">{{ currentUser }}</span> -->
+
+    <button class="greeting">{{ currentUser }}</button>
     <button class="logout-button" (click)="logout()">Logout</button>
   </div>
   <div class="sidebar">
@@ -8,22 +10,15 @@
       class="channel"
       *ngFor="let channel of channels"
       (click)="selectChannel(channel)"
+      [class.selected]="currentChannel === channel.name"
     >
       <div class="channel-message">
         <strong>{{ channel.name }}</strong>
-        <div class="channel-content">{{ channel.messages.pop()?.content }}</div>
-        <div class="channel-timestamp">
-          {{
-            channel.messages.pop()?.timestamp | date : "yyyy.MM.dd. 'at' H:mm"
-          }}
-        </div>
       </div>
     </div>
   </div>
   <div class="content">
-    <h2>RoundTable</h2>
     <div class="messages">
-      <!-- conditional rendering of sent message todo -->
       <div
         *ngFor="let message of messages"
         class="message"
@@ -34,9 +29,6 @@
           <span class="timestamp">{{
             message.timestamp | date : "yyyy.MM.dd. 'at' H:mm"
           }}</span>
-          <button class="dm-button" (click)="sendDirectMessage(message.to)">
-            <mat-icon aria-label="DM button" fontIcon="chat"></mat-icon>
-          </button>
         </div>
         <div class="message-content">{{ message.content }}</div>
       </div>
@@ -47,7 +39,12 @@
       <mat-form-field>
         <input matInput formControlName="message" />
       </mat-form-field>
-      <button mat-fab color="primary" (click)="sendMessage()">
+      <button
+        mat-fab
+        color="primary"
+        (click)="sendMessage(currentChannel)"
+        [disabled]="this.form.invalid"
+      >
         <mat-icon aria-label="Send button" fontIcon="send"></mat-icon>
       </button>
     </form>

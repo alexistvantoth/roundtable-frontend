@@ -3,7 +3,7 @@ export class Message {
     public from: string,
     public to: string,
     public content: string,
-    public timestamp?: Date,
+    public timestamp: Date = new Date(),
     public isPrivate: boolean = false
   ) {}
 }
