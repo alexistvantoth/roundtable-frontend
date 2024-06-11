@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Message } from '../models/message.model';
 import { HttpClient } from '@angular/common/http';
 import { Channel } from '../models/channel.model';
+import { environment } from '../../environment/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -28,15 +29,21 @@ export class ChatService {
   }
 
   getMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>('http://localhost:3000/chat');
+    return this.http.get<Message[]>(
+      `${environment.serverBaseUrl}:${environment.port}/chat`
+    );
   }
 
   getChannels(): Observable<Channel[]> {
-    return this.http.get<Channel[]>('http://localhost:3000/chat/channels');
+    return this.http.get<Channel[]>(
+      `${environment.serverBaseUrl}:${environment.port}/chat/channels`
+    );
   }
 
   isUserNameTaken(username: string): Observable<boolean> {
-    return this.http.get<boolean>(`http://localhost:3000/chat/${username}`);
+    return this.http.get<boolean>(
+      `${environment.serverBaseUrl}:${environment.port}/chat/${username}`
+    );
   }
 
   login(user: string) {
