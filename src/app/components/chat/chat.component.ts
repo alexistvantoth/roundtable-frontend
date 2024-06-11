@@ -120,10 +120,18 @@ export class ChatComponent {
   private addEventListeners() {
     this.chatService.getNewMessage().subscribe((message: Message) => {
       if (
-        message.to === this.currentChannel ||
-        message.from === this.currentChannel
-      )
+        message.to === this.mainChatRoom &&
+        this.currentChannel === this.mainChatRoom
+      ) {
         this.messages.push(message);
+      } else if (
+        (message.to === this.currentChannel &&
+          message.from === this.currentUser) ||
+        (message.from === this.currentChannel &&
+          message.to === this.currentUser)
+      ) {
+        this.messages.push(message);
+      }
     });
 
     this.chatService.handleJoinEvent().subscribe((joinedUserName: string) => {

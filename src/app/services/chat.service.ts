@@ -29,21 +29,15 @@ export class ChatService {
   }
 
   getMessages(): Observable<Message[]> {
-    return this.http.get<Message[]>(
-      `${environment.serverBaseUrl}:${environment.port}/chat`
-    );
+    return this.http.get<Message[]>('http://localhost:3000/chat');
   }
 
   getChannels(): Observable<Channel[]> {
-    return this.http.get<Channel[]>(
-      `${environment.serverBaseUrl}:${environment.port}/chat/channels`
-    );
+    return this.http.get<Channel[]>('http://localhost:3000/chat/channels');
   }
 
   isUserNameTaken(username: string): Observable<boolean> {
-    return this.http.get<boolean>(
-      `${environment.serverBaseUrl}:${environment.port}/chat/${username}`
-    );
+    return this.http.get<boolean>(`http://localhost:3000/chat/${username}`);
   }
 
   login(user: string) {
