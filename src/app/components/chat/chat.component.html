@@ -7,8 +7,8 @@
     <div
       class="channel"
       *ngFor="let channel of channels"
-      (click)="selectChannel(channel)"
       [class.selectedChannel]="currentChannel === channel.name"
+      (click)="selectChannel(channel)"
     >
       <div class="channel-message">
         <strong>{{ channel.name }}</strong>
