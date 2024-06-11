@@ -48,7 +48,13 @@ export class ChatComponent {
     this.currentUser = localStorage.getItem('username') || '{}';
 
     this.form = new UntypedFormGroup({
-      message: new FormControl('', Validators.required),
+      message: new FormControl(''),
+    });
+
+    this.form.controls['message'].valueChanges.subscribe((value) => {
+      if (!value) {
+        this.form.markAsPristine();
+      }
     });
 
     this.channels.push(new Channel(this.mainChatRoom));
@@ -69,6 +75,7 @@ export class ChatComponent {
 
   selectChannel(channel: Channel): void {
     this.currentChannel = channel.name;
+    this.form.reset();
     this.getMessages(this.currentChannel);
   }
 

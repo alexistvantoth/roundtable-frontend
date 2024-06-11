@@ -1,8 +1,6 @@
 <div class="container">
   <div class="navbar">
-    <!-- <span class="greeting">{{ currentUser }}</span> -->
-
-    <button class="greeting">{{ currentUser }}</button>
+    <span class="greeting">{{ currentUser }}</span>
     <button class="logout-button" (click)="logout()">Logout</button>
   </div>
   <div class="sidebar">
@@ -10,7 +8,7 @@
       class="channel"
       *ngFor="let channel of channels"
       (click)="selectChannel(channel)"
-      [class.selected]="currentChannel === channel.name"
+      [class.selectedChannel]="currentChannel === channel.name"
     >
       <div class="channel-message">
         <strong>{{ channel.name }}</strong>
@@ -37,13 +35,17 @@
   <div class="input-area">
     <form [formGroup]="form" class="form">
       <mat-form-field>
-        <input matInput formControlName="message" />
+        <input
+          matInput
+          formControlName="message"
+          placeholder="Type your message here.."
+        />
       </mat-form-field>
       <button
         mat-fab
         color="primary"
         (click)="sendMessage(currentChannel)"
-        [disabled]="this.form.invalid"
+        [disabled]="this.form.pristine"
       >
         <mat-icon aria-label="Send button" fontIcon="send"></mat-icon>
       </button>
